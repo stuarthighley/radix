@@ -75,8 +75,8 @@ func TestRadixSortUint64(t *testing.T) {
 
 func BenchmarkRadixSortUintFullRange(b *testing.B) {
 	b.StopTimer()
+	unsortedList := make([]uint, benchmarkLen)
 	for n := 0; n < b.N; n++ {
-		unsortedList := make([]uint, benchmarkLen)
 		for i := range unsortedList {
 			unsortedList[i] = uint(rand.Uint64())
 		}
@@ -89,8 +89,8 @@ func BenchmarkRadixSortUintFullRange(b *testing.B) {
 
 func BenchmarkRadixSortUintLimitedRange(b *testing.B) {
 	b.StopTimer()
+	unsortedList := make([]uint, benchmarkLen)
 	for n := 0; n < b.N; n++ {
-		unsortedList := make([]uint, benchmarkLen)
 		for i := range unsortedList {
 			unsortedList[i] = uint(rand.Intn(math.MaxInt16))
 		}
@@ -103,8 +103,8 @@ func BenchmarkRadixSortUintLimitedRange(b *testing.B) {
 
 func BenchmarkRadixSortUint8(b *testing.B) {
 	b.StopTimer()
+	unsortedList := make([]uint8, benchmarkLen)
 	for n := 0; n < b.N; n++ {
-		unsortedList := make([]uint8, benchmarkLen)
 		for i := range unsortedList {
 			unsortedList[i] = uint8(rand.Intn(math.MaxUint8))
 		}
@@ -117,8 +117,8 @@ func BenchmarkRadixSortUint8(b *testing.B) {
 
 func BenchmarkGoSortUintFullRange(b *testing.B) {
 	b.StopTimer()
+	unsortedList := make([]uint, benchmarkLen)
 	for n := 0; n < b.N; n++ {
-		unsortedList := make([]uint, benchmarkLen)
 		for i := range unsortedList {
 			unsortedList[i] = uint(rand.Uint64())
 		}
@@ -131,8 +131,8 @@ func BenchmarkGoSortUintFullRange(b *testing.B) {
 
 func BenchmarkGoSortSortUintLimitedRange(b *testing.B) {
 	b.StopTimer()
+	unsortedList := make([]uint, benchmarkLen)
 	for n := 0; n < b.N; n++ {
-		unsortedList := make([]uint, benchmarkLen)
 		for i := range unsortedList {
 			unsortedList[i] = uint(rand.Intn(math.MaxInt16))
 		}
@@ -145,8 +145,8 @@ func BenchmarkGoSortSortUintLimitedRange(b *testing.B) {
 
 func BenchmarkGoSortUint8(b *testing.B) {
 	b.StopTimer()
+	unsortedList := make([]uint8, benchmarkLen)
 	for n := 0; n < b.N; n++ {
-		unsortedList := make([]uint8, benchmarkLen)
 		for i := range unsortedList {
 			unsortedList[i] = uint8(rand.Intn(math.MaxUint8))
 		}
