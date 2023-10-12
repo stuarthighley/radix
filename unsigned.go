@@ -5,49 +5,51 @@ import (
 )
 
 // Radix Sort
-func RadixSort[T constraints.Integer](slice []T) []T {
+func RadixSort[T constraints.Unsigned](slice []T) []T {
 
-	const base = 7 // 2^7 -> 128 | 2^8 -> 256 | 2^9 -> 512
+	const base = 7 // 2^7 -> 128 | 2^8 -> 256
 	const numBuckets = 1 << base
 	const mask = numBuckets - 1
 
-	// typeBits := reflect.TypeOf(*new(T)).Bits()
-	// base := T(typeBits / 8)
-	// numBuckets := 1 << base
-	// mask := T(numBuckets - 1)
-
-	// The only memory allocation
+	// Allocate a copy of the slice, and the buckets
 	sorted := make([]T, len(slice))
+	buckets := make([]int, numBuckets)
 
 	// Loop until we reach the largest column
 	var largest T = 1
-	buckets := make([]int, numBuckets)
 	for column := 0; largest>>column > 0; column += base {
 
 		// Accumulate the appropriate bucket for each element
-		clear(buckets[:])
-		for _, element := range slice {
-			largest |= element
-			buckets[(int(element)>>column)&mask]++
+		clear(buckets)
+		for _, e := range slice {
+			largest |= e
+			buckets[(int(e)>>column)&mask]++
 		}
 
 		// Convert buckets to culmulative totals
-		for bkt := 1; bkt < numBuckets; bkt++ {
-			buckets[bkt] += buckets[bkt-1]
+		for i := 1; i < numBuckets; i++ {
+			buckets[i] += buckets[i-1]
 		}
 
 		// Use buckets to fill 'semiSorted' array
 		for i := len(slice) - 1; i >= 0; i-- {
-			element := slice[i]
-			bkt := (int(element) >> column) & mask
-			buckets[bkt]--
-			sorted[buckets[bkt]] = element
+			e := slice[i]
+			b := (int(e) >> column) & mask
+			buckets[b]--
+			sorted[buckets[b]] = e
 		}
 
 		// Swap the slices over to init for next loop
 		slice, sorted = sorted, slice
-
 	}
+
+	// if kind == reflect.Int || kind == reflect.Int8 || kind == reflect.Int16 || kind == reflect.Int32 || kind == reflect.Int64 {
+	// 	bits := t.Bits()
+	// 	signBit := 1 << (bits - 1)
+	// 	for i := range slice {
+	// 		slice[i] ^= T(signBit)
+	// 	}
+	// }
 
 	return slice
 }
