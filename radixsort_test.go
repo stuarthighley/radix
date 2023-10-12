@@ -1,58 +1,102 @@
 package radixsort
 
 import (
+	"math"
 	"math/rand"
 	"testing"
-	"time"
+
+	"github.com/stretchr/testify/assert"
+	"golang.org/x/exp/slices"
 )
 
 const testSliceSize = 50000
-const testSliceIntRange = 10000000
 
-func BenchmarkRadixSort(b *testing.B) {
+func TestRadixSortInt(t *testing.T) {
+	radix := make([]int, testSliceSize)
+	for i := range radix {
+		radix[i] = rand.Intn(math.MaxInt)
+	}
+	goSort := slices.Clone(radix)
+
+	radix = RadixSort(radix)
+	slices.Sort(goSort)
+	assert.Equal(t, goSort, radix)
+}
+
+func TestRadixSortInt8(t *testing.T) {
+	radix := make([]int8, testSliceSize)
+	for i := range radix {
+		radix[i] = int8(rand.Intn(math.MaxInt8))
+	}
+	goSort := slices.Clone(radix)
+
+	radix = RadixSort(radix)
+	slices.Sort(goSort)
+	assert.Equal(t, goSort, radix)
+}
+
+func BenchmarkRadixSortInt(b *testing.B) {
 
 	b.StopTimer()
-
-	//Provide seed
-	rand.Seed(time.Now().Unix())
 
 	for n := 0; n < b.N; n++ {
 
 		unsortedList := make([]int, testSliceSize)
 		for i := range unsortedList {
-			unsortedList[i] = rand.Intn(testSliceIntRange)
+			unsortedList[i] = rand.Intn(math.MaxInt)
 		}
 
 		b.StartTimer()
-		RadixSort(unsortedList)
+		unsortedList = RadixSort(unsortedList)
 		b.StopTimer()
 
 	}
 
 }
 
-func BenchmarkQuicksort(b *testing.B) {
+func BenchmarkRadixSortInt8(b *testing.B) {
+	b.StopTimer()
+	for n := 0; n < b.N; n++ {
+		unsortedList := make([]int8, testSliceSize)
+		for i := range unsortedList {
+			unsortedList[i] = int8(rand.Intn(math.MaxInt8))
+		}
+
+		b.StartTimer()
+		unsortedList = RadixSort(unsortedList)
+		b.StopTimer()
+	}
+}
+
+func BenchmarkGoSortInt(b *testing.B) {
 
 	var unsortedList []int
 	b.StopTimer()
-
-	//Provide seed
-	rand.Seed(time.Now().Unix())
 
 	for n := 0; n < b.N; n++ {
 
 		unsortedList = make([]int, testSliceSize)
 		for i := range unsortedList {
-			unsortedList[i] = rand.Intn(testSliceIntRange)
+			unsortedList[i] = rand.Intn(math.MaxInt)
 		}
 
 		b.StartTimer()
-		QuickSort(unsortedList)
+		slices.Sort(unsortedList)
 		b.StopTimer()
 	}
 
 }
 
-// func TestFirst(t *testing.T) {
+func BenchmarkGoSortInt8(b *testing.B) {
+	b.StopTimer()
+	for n := 0; n < b.N; n++ {
+		unsortedList := make([]int8, testSliceSize)
+		for i := range unsortedList {
+			unsortedList[i] = int8(rand.Intn(math.MaxInt8))
+		}
 
-// }
+		b.StartTimer()
+		slices.Sort(unsortedList)
+		b.StopTimer()
+	}
+}
