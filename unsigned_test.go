@@ -1,4 +1,4 @@
-package radixsort
+package radix_test
 
 import (
 	"math"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stuarthighley/radix"
 	"golang.org/x/exp/slices"
 )
 
@@ -13,63 +14,63 @@ const testLen = 10
 const benchmarkLen = 50000
 
 func TestRadixSortUint(t *testing.T) {
-	radix := make([]uint, testLen)
-	for i := range radix {
-		radix[i] = uint(rand.Uint64())
+	radixSlice := make([]uint, testLen)
+	for i := range radixSlice {
+		radixSlice[i] = uint(rand.Uint64())
 	}
-	goSort := slices.Clone(radix)
+	goSort := slices.Clone(radixSlice)
 
-	radix = RadixSort(radix)
+	radixSlice = radix.Sort(radixSlice)
 	slices.Sort(goSort)
-	assert.Equal(t, goSort, radix)
+	assert.Equal(t, goSort, radixSlice)
 }
 
 func TestRadixSortUint8(t *testing.T) {
-	radix := make([]uint8, testLen)
-	for i := range radix {
-		radix[i] = uint8(rand.Intn(math.MaxUint8))
+	radixSlice := make([]uint8, testLen)
+	for i := range radixSlice {
+		radixSlice[i] = uint8(rand.Intn(math.MaxUint8))
 	}
-	goSort := slices.Clone(radix)
+	goSort := slices.Clone(radixSlice)
 
-	radix = RadixSort(radix)
+	radixSlice = radix.Sort(radixSlice)
 	slices.Sort(goSort)
-	assert.Equal(t, goSort, radix)
+	assert.Equal(t, goSort, radixSlice)
 }
 
 func TestRadixSortUint16(t *testing.T) {
-	radix := make([]uint16, testLen)
-	for i := range radix {
-		radix[i] = uint16(rand.Intn(math.MaxUint16))
+	radixSlice := make([]uint16, testLen)
+	for i := range radixSlice {
+		radixSlice[i] = uint16(rand.Intn(math.MaxUint16))
 	}
-	goSort := slices.Clone(radix)
+	goSort := slices.Clone(radixSlice)
 
-	radix = RadixSort(radix)
+	radixSlice = radix.Sort(radixSlice)
 	slices.Sort(goSort)
-	assert.Equal(t, goSort, radix)
+	assert.Equal(t, goSort, radixSlice)
 }
 
 func TestRadixSortUint32(t *testing.T) {
-	radix := make([]uint32, testLen)
-	for i := range radix {
-		radix[i] = uint32(rand.Uint32())
+	radixSlice := make([]uint32, testLen)
+	for i := range radixSlice {
+		radixSlice[i] = uint32(rand.Uint32())
 	}
-	goSort := slices.Clone(radix)
+	goSort := slices.Clone(radixSlice)
 
-	radix = RadixSort(radix)
+	radixSlice = radix.Sort(radixSlice)
 	slices.Sort(goSort)
-	assert.Equal(t, goSort, radix)
+	assert.Equal(t, goSort, radixSlice)
 }
 
 func TestRadixSortUint64(t *testing.T) {
-	radix := make([]uint64, testLen)
-	for i := range radix {
-		radix[i] = uint64(rand.Uint64())
+	radixSlice := make([]uint64, testLen)
+	for i := range radixSlice {
+		radixSlice[i] = uint64(rand.Uint64())
 	}
-	goSort := slices.Clone(radix)
+	goSort := slices.Clone(radixSlice)
 
-	radix = RadixSort(radix)
+	radixSlice = radix.Sort(radixSlice)
 	slices.Sort(goSort)
-	assert.Equal(t, goSort, radix)
+	assert.Equal(t, goSort, radixSlice)
 }
 
 func BenchmarkRadixSortUintFullRange(b *testing.B) {
@@ -81,7 +82,7 @@ func BenchmarkRadixSortUintFullRange(b *testing.B) {
 		}
 
 		b.StartTimer()
-		RadixSort(unsortedList)
+		radix.Sort(unsortedList)
 		b.StopTimer()
 	}
 }
@@ -95,7 +96,7 @@ func BenchmarkRadixSortUintLimitedRange(b *testing.B) {
 		}
 
 		b.StartTimer()
-		RadixSort(unsortedList)
+		radix.Sort(unsortedList)
 		b.StopTimer()
 	}
 }
@@ -109,7 +110,7 @@ func BenchmarkRadixSortUint8(b *testing.B) {
 		}
 
 		b.StartTimer()
-		RadixSort(unsortedList)
+		radix.Sort(unsortedList)
 		b.StopTimer()
 	}
 }

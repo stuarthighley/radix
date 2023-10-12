@@ -1,15 +1,15 @@
-package radixsort
+package radix
 
 import (
 	"golang.org/x/exp/constraints"
 )
 
-// Radix Sort
-func RadixSort[T constraints.Unsigned](slice []T) []T {
+const base = 8 // 2^7 -> 128 | 2^8 -> 256
+const numBuckets = 1 << base
+const mask = numBuckets - 1
 
-	const base = 8 // 2^7 -> 128 | 2^8 -> 256
-	const numBuckets = 1 << base
-	const mask = numBuckets - 1
+// Radix Sort
+func Sort[T constraints.Unsigned](slice []T) []T {
 
 	// Allocate a copy of the slice, and the buckets
 	sorted := make([]T, len(slice))
