@@ -1,15 +1,14 @@
-# radixsort
+# radix
 
-`radixsort` package implements radix sorting, currently for all unsigned integer types.
+`radix` package implements radix sorting, currently for all unsigned integer types.
 
 The usage looks like:
 
 ```go
-import "github.com/stuarthighley/radixsort"
+import "github.com/stuarthighley/radix"
 
 func Example() {
-	data := []int64{3,4,1,2}
-
-	radixsort.Uint64(data, tmpbuf)
+	data := []uint64{4, 2, 1, 3}
+	data = radix.Sort(data)
 }
 ```
