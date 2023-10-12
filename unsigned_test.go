@@ -24,18 +24,6 @@ func TestRadixSortUint(t *testing.T) {
 	assert.Equal(t, goSort, radix)
 }
 
-// func TestRadixSortIntNeg(t *testing.T) {
-// 	radix := make([]int, testLen)
-// 	for i := range radix {
-// 		radix[i] = rand.Int() - (math.MaxInt >> 1)
-// 	}
-// 	goSort := slices.Clone(radix)
-
-// 	radix = RadixSort(radix)
-// 	slices.Sort(goSort)
-// 	assert.Equal(t, goSort, radix)
-// }
-
 func TestRadixSortUint8(t *testing.T) {
 	radix := make([]uint8, testLen)
 	for i := range radix {
@@ -47,18 +35,6 @@ func TestRadixSortUint8(t *testing.T) {
 	slices.Sort(goSort)
 	assert.Equal(t, goSort, radix)
 }
-
-// func TestRadixSortInt8Neg(t *testing.T) {
-// 	radix := make([]int8, testLen)
-// 	for i := range radix {
-// 		radix[i] = int8(rand.Intn(math.MaxInt8) - (math.MaxInt8 >> 1))
-// 	}
-// 	goSort := slices.Clone(radix)
-
-// 	radix = RadixSort(radix)
-// 	slices.Sort(goSort)
-// 	assert.Equal(t, goSort, radix)
-// }
 
 func TestRadixSortUint16(t *testing.T) {
 	radix := make([]uint16, testLen)
