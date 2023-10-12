@@ -62,15 +62,36 @@ func TestRadixSortUint32(t *testing.T) {
 }
 
 func TestRadixSortUint64(t *testing.T) {
-	radixSlice := make([]uint64, testLen)
-	for i := range radixSlice {
-		radixSlice[i] = uint64(rand.Uint64())
+	actual := make([]uint64, testLen)
+	for i := range actual {
+		actual[i] = uint64(rand.Uint64())
 	}
-	goSort := slices.Clone(radixSlice)
+	expected := slices.Clone(actual)
 
-	radixSlice = radix.Sort(radixSlice)
-	slices.Sort(goSort)
-	assert.Equal(t, goSort, radixSlice)
+	actual = radix.Sort(actual)
+	slices.Sort(expected)
+	assert.Equal(t, expected, actual)
+}
+
+func FuzzSortByte(f *testing.F) {
+
+	// Provide seed corpus
+	testcases := [][]byte{{}, {1}, {2, 1}}
+	for _, tc := range testcases {
+		f.Add(tc)
+	}
+	tc := make([]byte, testLen)
+	for i := range tc {
+		tc[i] = byte(rand.Intn(math.MaxUint8))
+	}
+	f.Add(tc)
+
+	f.Fuzz(func(t *testing.T, actual []byte) {
+		expected := slices.Clone(actual)
+		actual = radix.Sort(actual)
+		slices.Sort(expected)
+		assert.Equal(t, expected, actual)
+	})
 }
 
 func BenchmarkRadixSortUintFullRange(b *testing.B) {
