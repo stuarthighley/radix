@@ -17,7 +17,7 @@ func Sort[T constraints.Unsigned](slice []T) []T {
 	sorted := make([]T, len(slice))
 
 	// Loop until we reach the largest column
-	var largest T = 1
+	largest := T(1)
 	for column := 0; largest>>column > 0; column += base {
 
 		// Accumulate the appropriate bucket for each element
