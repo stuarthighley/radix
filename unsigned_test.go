@@ -10,77 +10,17 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-const testLen = 10
-const benchmarkLen = 50000
+const fuzzLen = 100
+const benchmarkLen = 10000
 
-func TestRadixSortUint(t *testing.T) {
-	radixSlice := make([]uint, testLen)
-	for i := range radixSlice {
-		radixSlice[i] = uint(rand.Uint64())
-	}
-	goSort := slices.Clone(radixSlice)
-
-	radixSlice = radix.Sort(radixSlice)
-	slices.Sort(goSort)
-	assert.Equal(t, goSort, radixSlice)
-}
-
-func TestRadixSortUint8(t *testing.T) {
-	radixSlice := make([]uint8, testLen)
-	for i := range radixSlice {
-		radixSlice[i] = uint8(rand.Intn(math.MaxUint8))
-	}
-	goSort := slices.Clone(radixSlice)
-
-	radixSlice = radix.Sort(radixSlice)
-	slices.Sort(goSort)
-	assert.Equal(t, goSort, radixSlice)
-}
-
-func TestRadixSortUint16(t *testing.T) {
-	radixSlice := make([]uint16, testLen)
-	for i := range radixSlice {
-		radixSlice[i] = uint16(rand.Intn(math.MaxUint16))
-	}
-	goSort := slices.Clone(radixSlice)
-
-	radixSlice = radix.Sort(radixSlice)
-	slices.Sort(goSort)
-	assert.Equal(t, goSort, radixSlice)
-}
-
-func TestRadixSortUint32(t *testing.T) {
-	radixSlice := make([]uint32, testLen)
-	for i := range radixSlice {
-		radixSlice[i] = uint32(rand.Uint32())
-	}
-	goSort := slices.Clone(radixSlice)
-
-	radixSlice = radix.Sort(radixSlice)
-	slices.Sort(goSort)
-	assert.Equal(t, goSort, radixSlice)
-}
-
-func TestRadixSortUint64(t *testing.T) {
-	actual := make([]uint64, testLen)
-	for i := range actual {
-		actual[i] = uint64(rand.Uint64())
-	}
-	expected := slices.Clone(actual)
-
-	actual = radix.Sort(actual)
-	slices.Sort(expected)
-	assert.Equal(t, expected, actual)
-}
+var testLens = []int{0, 1, 2, 10, 100, 1000, 10000}
+var fuzzCases = [][]byte{{}, {1}, {2, 1}, {255, 1, 128}}
 
 func FuzzSortByte(f *testing.F) {
-
-	// Provide seed corpus
-	testcases := [][]byte{{}, {1}, {2, 1}}
-	for _, tc := range testcases {
+	for _, tc := range fuzzCases {
 		f.Add(tc)
 	}
-	tc := make([]byte, testLen)
+	tc := make([]byte, fuzzLen)
 	for i := range tc {
 		tc[i] = byte(rand.Intn(math.MaxUint8))
 	}
@@ -92,6 +32,77 @@ func FuzzSortByte(f *testing.F) {
 		slices.Sort(expected)
 		assert.Equal(t, expected, actual)
 	})
+}
+
+func TestRadixSortUint(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]uint, testLen)
+		for i := range actual {
+			actual[i] = uint(rand.Uint64())
+		}
+		expected := slices.Clone(actual)
+
+		actual = radix.Sort(actual)
+		slices.Sort(expected)
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func TestRadixSortUint8(t *testing.T) {
+	for _, testLen := range testLens {
+
+		actual := make([]uint8, testLen)
+		for i := range actual {
+			actual[i] = uint8(rand.Intn(math.MaxUint8))
+		}
+		expected := slices.Clone(actual)
+
+		actual = radix.Sort(actual)
+		slices.Sort(expected)
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func TestRadixSortUint16(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]uint16, testLen)
+		for i := range actual {
+			actual[i] = uint16(rand.Intn(math.MaxUint16))
+		}
+		expected := slices.Clone(actual)
+
+		actual = radix.Sort(actual)
+		slices.Sort(expected)
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func TestRadixSortUint32(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]uint32, testLen)
+		for i := range actual {
+			actual[i] = uint32(rand.Uint32())
+		}
+		expected := slices.Clone(actual)
+
+		actual = radix.Sort(actual)
+		slices.Sort(expected)
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func TestRadixSortUint64(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]uint64, testLen)
+		for i := range actual {
+			actual[i] = uint64(rand.Uint64())
+		}
+		expected := slices.Clone(actual)
+
+		actual = radix.Sort(actual)
+		slices.Sort(expected)
+		assert.Equal(t, expected, actual)
+	}
 }
 
 func BenchmarkRadixSortUintFullRange(b *testing.B) {

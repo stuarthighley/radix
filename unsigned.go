@@ -13,14 +13,15 @@ var buckets [numBuckets]int
 // Radix Sort
 func Sort[T constraints.Unsigned](slice []T) []T {
 
-	// Allocate copy of input slice
+	// Copy input slice
 	sorted := make([]T, len(slice))
 
 	// Loop until we reach the largest column
 	largest := T(1)
 	for column := 0; largest>>column > 0; column += base {
 
-		// Accumulate the appropriate bucket for each element
+		// Accumulate the bucket for the masked bits for each element
+		// Also record the largest used column
 		clear(buckets[:])
 		for _, e := range slice {
 			largest |= e
@@ -32,7 +33,7 @@ func Sort[T constraints.Unsigned](slice []T) []T {
 			buckets[i] += buckets[i-1]
 		}
 
-		// Use buckets to fill 'semi-sorted' array
+		// Use buckets to fill semi-sorted slice
 		for i := len(slice) - 1; i >= 0; i-- {
 			e := slice[i]
 			b := (int(e) >> column) & mask
