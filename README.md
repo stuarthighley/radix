@@ -1,8 +1,8 @@
 # radix
 
-`radix` package implements radix sorting, currently for all unsigned integer types.
+The `radix` package implements radix sorting, currently for all unsigned integer types.
 
-The usage looks like:
+Usage:
 
 ```go
 import "github.com/stuarthighley/radix"
