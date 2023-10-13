@@ -28,8 +28,8 @@ func FuzzSortByte(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, actual []byte) {
 		expected := slices.Clone(actual)
-		actual = radix.Sort(actual)
 		slices.Sort(expected)
+		actual = radix.Sort(actual)
 		assert.Equal(t, expected, actual)
 	})
 }
@@ -41,9 +41,9 @@ func TestRadixSortUint(t *testing.T) {
 			actual[i] = uint(rand.Uint64())
 		}
 		expected := slices.Clone(actual)
+		slices.Sort(expected)
 
 		actual = radix.Sort(actual)
-		slices.Sort(expected)
 		assert.Equal(t, expected, actual)
 	}
 }
@@ -56,9 +56,9 @@ func TestRadixSortUint8(t *testing.T) {
 			actual[i] = uint8(rand.Intn(math.MaxUint8))
 		}
 		expected := slices.Clone(actual)
+		slices.Sort(expected)
 
 		actual = radix.Sort(actual)
-		slices.Sort(expected)
 		assert.Equal(t, expected, actual)
 	}
 }
@@ -70,9 +70,9 @@ func TestRadixSortUint16(t *testing.T) {
 			actual[i] = uint16(rand.Intn(math.MaxUint16))
 		}
 		expected := slices.Clone(actual)
+		slices.Sort(expected)
 
 		actual = radix.Sort(actual)
-		slices.Sort(expected)
 		assert.Equal(t, expected, actual)
 	}
 }
@@ -84,9 +84,9 @@ func TestRadixSortUint32(t *testing.T) {
 			actual[i] = uint32(rand.Uint32())
 		}
 		expected := slices.Clone(actual)
+		slices.Sort(expected)
 
 		actual = radix.Sort(actual)
-		slices.Sort(expected)
 		assert.Equal(t, expected, actual)
 	}
 }
@@ -98,9 +98,9 @@ func TestRadixSortUint64(t *testing.T) {
 			actual[i] = uint64(rand.Uint64())
 		}
 		expected := slices.Clone(actual)
+		slices.Sort(expected)
 
 		actual = radix.Sort(actual)
-		slices.Sort(expected)
 		assert.Equal(t, expected, actual)
 	}
 }
