@@ -48,6 +48,23 @@ func TestRadixSortUint(t *testing.T) {
 	}
 }
 
+func TestRadixSortInt(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]int, testLen)
+		for i := range actual {
+			actual[i] = int(rand.Uint64() - math.MaxInt64)
+		}
+		expected := slices.Clone(actual)
+		slices.Sort(expected)
+
+		actual = radix.Sort(actual)
+		assert.Equal(t, expected, actual)
+		if t.Failed() {
+			break
+		}
+	}
+}
+
 func TestRadixSortUint8(t *testing.T) {
 	for _, testLen := range testLens {
 
@@ -63,6 +80,23 @@ func TestRadixSortUint8(t *testing.T) {
 	}
 }
 
+func TestRadixSortInt8(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]int8, testLen)
+		for i := range actual {
+			actual[i] = int8(rand.Intn(math.MaxUint8) - 128)
+		}
+		expected := slices.Clone(actual)
+		slices.Sort(expected)
+
+		actual = radix.Sort(actual)
+		assert.Equal(t, expected, actual)
+		if t.Failed() {
+			break
+		}
+	}
+}
+
 func TestRadixSortUint16(t *testing.T) {
 	for _, testLen := range testLens {
 		actual := make([]uint16, testLen)
@@ -74,6 +108,23 @@ func TestRadixSortUint16(t *testing.T) {
 
 		actual = radix.Sort(actual)
 		assert.Equal(t, expected, actual)
+	}
+}
+
+func TestRadixSortInt16(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]int16, testLen)
+		for i := range actual {
+			actual[i] = int16(rand.Intn(math.MaxUint16) - math.MaxInt16)
+		}
+		expected := slices.Clone(actual)
+		slices.Sort(expected)
+
+		actual = radix.Sort(actual)
+		assert.Equal(t, expected, actual)
+		if t.Failed() {
+			break
+		}
 	}
 }
 
@@ -119,12 +170,40 @@ func BenchmarkRadixSortUintFullRange(b *testing.B) {
 	}
 }
 
+func BenchmarkRadixSortIntFullRange(b *testing.B) {
+	b.StopTimer()
+	unsortedList := make([]int, benchmarkLen)
+	for n := 0; n < b.N; n++ {
+		for i := range unsortedList {
+			unsortedList[i] = int(rand.Uint64() - math.MaxInt)
+		}
+
+		b.StartTimer()
+		radix.Sort(unsortedList)
+		b.StopTimer()
+	}
+}
+
 func BenchmarkRadixSortUintLimitedRange(b *testing.B) {
 	b.StopTimer()
 	unsortedList := make([]uint, benchmarkLen)
 	for n := 0; n < b.N; n++ {
 		for i := range unsortedList {
-			unsortedList[i] = uint(rand.Intn(math.MaxInt16))
+			unsortedList[i] = uint(rand.Intn(math.MaxUint16))
+		}
+
+		b.StartTimer()
+		radix.Sort(unsortedList)
+		b.StopTimer()
+	}
+}
+
+func BenchmarkRadixSortIntLimitedRange(b *testing.B) {
+	b.StopTimer()
+	unsortedList := make([]int, benchmarkLen)
+	for n := 0; n < b.N; n++ {
+		for i := range unsortedList {
+			unsortedList[i] = int(rand.Intn(math.MaxUint16) - math.MaxInt16)
 		}
 
 		b.StartTimer()
@@ -139,6 +218,20 @@ func BenchmarkRadixSortUint8(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for i := range unsortedList {
 			unsortedList[i] = uint8(rand.Intn(math.MaxUint8))
+		}
+
+		b.StartTimer()
+		radix.Sort(unsortedList)
+		b.StopTimer()
+	}
+}
+
+func BenchmarkRadixSortInt8(b *testing.B) {
+	b.StopTimer()
+	unsortedList := make([]int8, benchmarkLen)
+	for n := 0; n < b.N; n++ {
+		for i := range unsortedList {
+			unsortedList[i] = int8(rand.Intn(math.MaxUint8) - math.MaxInt8)
 		}
 
 		b.StartTimer()
