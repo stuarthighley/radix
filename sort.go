@@ -2,7 +2,6 @@ package radix
 
 import (
 	"reflect"
-	"slices"
 
 	"golang.org/x/exp/constraints"
 )
@@ -11,18 +10,15 @@ const base = 8
 const numBuckets = 1 << base // 256
 const mask = numBuckets - 1  // 255
 
-// const offset = 1 << (base - 1)
-
 var buckets [numBuckets]int
 
 // Radix Sort
 func Sort[T constraints.Integer](input []T) []T {
 
+	bits := reflect.TypeOf(*new(T)).Bits()
+	testUnsigned := -1
 	signMask := T(0)
-	typeOf := reflect.TypeOf(*new(T))
-	kind := typeOf.Kind()
-	bits := typeOf.Bits()
-	if slices.Contains([]reflect.Kind{reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64}, kind) {
+	if T(testUnsigned) < 0 {
 		signMask = 1 << (bits - 1)
 	}
 
