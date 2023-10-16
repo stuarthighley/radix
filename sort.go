@@ -33,7 +33,7 @@ func Sort[T constraints.Integer](input []T) []T {
 	// Calculate columns to iterate over
 	highest := slices.Max(input)
 	if highest < 0 {
-		highest = ^highest
+		highest = (^highest) + 1
 	}
 	lowest := slices.Min(input)
 	if lowest < 0 {
