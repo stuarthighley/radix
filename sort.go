@@ -1,9 +1,11 @@
 package radix
 
 import (
+	"math/bits"
 	"reflect"
 
 	"golang.org/x/exp/constraints"
+	"golang.org/x/exp/slices"
 )
 
 const base = 8
@@ -15,21 +17,37 @@ var buckets [numBuckets]int
 // Radix Sort
 func Sort[T constraints.Integer](input []T) []T {
 
-	bits := reflect.TypeOf(*new(T)).Bits()
-	testUnsigned := -1
-	signMask := T(0)
-	if T(testUnsigned) < 0 {
-		signMask = 1 << (bits - 1)
+	// Fast exit
+	if len(input) == 0 {
+		return input
 	}
 
-	// Allocate space for semi-output slice
+	// Prepare XOR mask for signed ints
+	typeBits := reflect.TypeOf(*new(T)).Bits()
+	signMask := T(0)
+	testUnsigned := -1
+	if T(testUnsigned) < 0 {
+		signMask = 1 << (typeBits - 1)
+	}
+
+	// Calculate columns to iterate over
+	highest := slices.Max(input)
+	if highest < 0 {
+		highest = ^highest
+	}
+	lowest := slices.Min(input)
+	if lowest < 0 {
+		lowest = (^lowest) + 1
+	}
+	highestCol := max(bits.Len64(uint64(highest)), bits.Len64(uint64(lowest)))
+
+	// Iterate over all significant columns
 	output := make([]T, len(input))
+	for column := 0; column < typeBits; column += base {
 
-	// Loop until we reach the bitsUsed column
-	bitsUsed := uint64(1)
-	for column := 0; column < bits; column += base {
-
-		if bitsUsed>>uint64(column)&mask == 0 {
+		// We can skip iterations that are higher than the absolute values,
+		// and don't contain the sign bit
+		if column > highestCol && column < typeBits-base {
 			continue
 		}
 
@@ -37,13 +55,6 @@ func Sort[T constraints.Integer](input []T) []T {
 		// Also record the largest used column
 		clear(buckets[:])
 		for _, e := range input {
-			if e < 0 {
-				bitsUsed |= (^uint64(e) ^ uint64(signMask))
-			} else {
-				bitsUsed |= uint64(e)
-			}
-
-			// bitsUnused |= ^uint64(e)
 			b := ((int(e^signMask) >> column) & mask)
 			buckets[b]++
 		}

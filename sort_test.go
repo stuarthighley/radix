@@ -11,9 +11,9 @@ import (
 )
 
 const fuzzLen = 100
-const benchmarkLen = 10000
+const benchmarkLen = 100000
 
-var testLens = []int{0, 1, 2, 10, 100, 1000, 10000}
+var testLens = []int{0, 1, 2, 10, 1000, 100000, 1000000}
 var fuzzCases = [][]byte{{}, {1}, {2, 1}, {255, 1, 128}}
 
 func FuzzSortByte(f *testing.F) {
@@ -48,11 +48,42 @@ func TestRadixSortUint(t *testing.T) {
 	}
 }
 
+func TestRadixSortUintLimitedRange(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]uint, testLen)
+		for i := range actual {
+			actual[i] = uint(rand.Intn(math.MaxUint16))
+		}
+		expected := slices.Clone(actual)
+		slices.Sort(expected)
+
+		actual = radix.Sort(actual)
+		assert.Equal(t, expected, actual)
+	}
+}
+
 func TestRadixSortInt(t *testing.T) {
 	for _, testLen := range testLens {
 		actual := make([]int, testLen)
 		for i := range actual {
 			actual[i] = int(rand.Uint64() - math.MaxInt64)
+		}
+		expected := slices.Clone(actual)
+		slices.Sort(expected)
+
+		actual = radix.Sort(actual)
+		assert.Equal(t, expected, actual)
+		if t.Failed() {
+			break
+		}
+	}
+}
+
+func TestRadixSortIntLimitedRange(t *testing.T) {
+	for _, testLen := range testLens {
+		actual := make([]int, testLen)
+		for i := range actual {
+			actual[i] = int(rand.Intn(math.MaxUint16) - math.MaxInt16)
 		}
 		expected := slices.Clone(actual)
 		slices.Sort(expected)
