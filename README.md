@@ -5,13 +5,21 @@ The `radix` package implements radix sorting, currently for all signed and unsig
 Usage:
 
 ```go
-import "github.com/stuarthighley/radix"
+package main
 
-func Example() {
+import (
+	"fmt"
+
+	"github.com/stuarthighley/radix"
+)
+
+func main() {
 	uints := []uint64{4, 2, 1, 3}
 	radix.SortInts(uints)
+	fmt.Println(uints)
 
 	data := []string{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"}
 	radix.SortStrings(data)
+	fmt.Println(data)
 }
 ```
