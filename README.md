@@ -8,7 +8,10 @@ Usage:
 import "github.com/stuarthighley/radix"
 
 func Example() {
-	data := []uint64{4, 2, 1, 3}
-	data = radix.Sort(data)
+	uints := []uint64{4, 2, 1, 3}
+	radix.SortInts(uints)
+
+	data := []string{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"}
+	radix.SortStrings(data)
 }
 ```
