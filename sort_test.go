@@ -317,7 +317,7 @@ func BenchmarkSlicesSortUint8(b *testing.B) {
 	}
 }
 
-func BenchmarRadixSortStrings(b *testing.B) {
+func BenchmarkRadixSortStrings(b *testing.B) {
 	b.StopTimer()
 	unsorted := make([]string, 1<<10)
 	for i := range unsorted {

@@ -95,18 +95,18 @@ func shallowEqual[T any](s1, s2 []T) bool {
 }
 
 // SortStrings sorts a slice of strings in ascending order.
-func SortStrings(input []string) {
+func SortStrings[T ~string](input []T) {
 
 	// Iterate backwards over string chars
 	maxLen := maxLen(input)
 	work1 := input
-	work2 := make([]string, len(work1))
+	work2 := make([]T, len(work1))
 	for column := maxLen - 1; column >= 0; column-- {
 
 		// Accumulate the bucket for each element
 		clear(buckets[:])
 		for _, e := range work1 {
-			buckets[charOrZero(e, column)]++
+			buckets[charOrZero(string(e), column)]++
 		}
 
 		// Convert buckets to culmulative totals
@@ -131,7 +131,7 @@ func SortStrings(input []string) {
 	}
 }
 
-func maxLen(s []string) int {
+func maxLen[T ~string](s []T) int {
 	maxLen := 0
 	for _, e := range s {
 		maxLen = max(maxLen, len(e))
@@ -139,7 +139,7 @@ func maxLen(s []string) int {
 	return maxLen
 }
 
-func charOrZero(s string, i int) byte {
+func charOrZero[T ~string](s T, i int) byte {
 	if i < len(s) {
 		return s[i]
 	}
