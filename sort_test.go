@@ -184,11 +184,16 @@ func TestRadixSortUint64(t *testing.T) {
 	}
 }
 
-var strings = [...]string{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"}
+var stringTests = [][]string{
+	{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"},
+	{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&z", "***"},
+}
 
-func TestSortString(t *testing.T) {
-	radix.SortStrings(strings[:])
-	assert.True(t, slices.IsSorted(strings[:]), "not sorted: %v", strings[:])
+func TestSortStrings(t *testing.T) {
+	for _, test := range stringTests {
+		radix.SortStrings(test)
+		assert.True(t, slices.IsSorted(test), "not sorted: %v", test)
+	}
 }
 
 func BenchmarkRadixSortUintFullRange(b *testing.B) {

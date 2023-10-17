@@ -126,8 +126,8 @@ func SortStrings[T ~string](input []T) {
 	}
 
 	// One final copy if needed
-	if !shallowEqual(work1, work1) {
-		copy(work1, work1)
+	if !shallowEqual(input, work1) {
+		copy(input, work1)
 	}
 }
 
