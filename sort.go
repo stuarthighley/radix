@@ -21,35 +21,35 @@ func SortInts[T constraints.Integer](input []T) {
 	}
 
 	// Prepare XOR mask for signed ints
-	typeBits := reflect.TypeOf(*new(T)).Bits()
+	typeBitLen := reflect.TypeOf(*new(T)).Bits()
 	signMask := T(0)
 	testUnsigned := -1
 	if T(testUnsigned) < 0 {
-		signMask = 1 << (typeBits - 1)
+		signMask = 1 << (typeBitLen - 1)
 	}
 
 	// Get columns to iterate over
-	highestCol := getMaxBits(input)
+	maxBitLen := getMaxBitLen(input)
 
 	// Iterate over all significant columns
 	work1 := input
 	work2 := make([]T, len(work1))
-	for column := 0; column < typeBits; column += base {
+	for column := 0; column < typeBitLen; column += base {
 
 		// We can skip iterations higher than the absolute values,
 		// and don't contain the sign bit
-		if column > highestCol && column < typeBits-base {
+		if column > maxBitLen && column < typeBitLen-base {
 			continue
 		}
 
-		// Accumulate the bucket for the masked bits for each element
+		// Accumulate each element's bucket based on masked bits
 		clear(buckets[:])
 		for _, e := range work1 {
 			b := ((int(e^signMask) >> column) & mask)
 			buckets[b]++
 		}
 
-		// Convert buckets to culmulative totals
+		// Convert bucket totals to culmulative totals
 		for i := 1; i < numBuckets; i++ {
 			buckets[i] += buckets[i-1]
 		}
@@ -72,9 +72,9 @@ func SortInts[T constraints.Integer](input []T) {
 	}
 }
 
-// getMaxBits returns the highest number of bits used in the ints from the passed slice.
+// getMaxBitLen returns the highest number of bits used in the ints from the passed slice.
 // The sign bit for negative ints is ignored.
-func getMaxBits[T constraints.Integer](s []T) int {
+func getMaxBitLen[T constraints.Integer](s []T) int {
 	highest := slices.Max(s)
 	if highest < 0 {
 		highest = (^highest) + 1
@@ -98,18 +98,17 @@ func shallowEqual[T any](s1, s2 []T) bool {
 func SortStrings[T ~string](input []T) {
 
 	// Iterate backwards over string chars
-	maxLen := maxLen(input)
 	work1 := input
 	work2 := make([]T, len(work1))
-	for column := maxLen - 1; column >= 0; column-- {
+	for column := maxLen(input) - 1; column >= 0; column-- {
 
-		// Accumulate the bucket for each element
+		// Accumulate each element's bucket
 		clear(buckets[:])
 		for _, e := range work1 {
-			buckets[charOrZero(string(e), column)]++
+			buckets[charOrZero(e, column)]++
 		}
 
-		// Convert buckets to culmulative totals
+		// Convert bucket totals to culmulative totals
 		for i := 1; i < numBuckets; i++ {
 			buckets[i] += buckets[i-1]
 		}
@@ -131,6 +130,7 @@ func SortStrings[T ~string](input []T) {
 	}
 }
 
+// maxLen returns the length of the longest string in the given slice.
 func maxLen[T ~string](s []T) int {
 	maxLen := 0
 	for _, e := range s {
@@ -139,9 +139,10 @@ func maxLen[T ~string](s []T) int {
 	return maxLen
 }
 
+// charOrZero returns the char at index i, or 0 if the string is shorter than i.
 func charOrZero[T ~string](s T, i int) byte {
-	if i < len(s) {
-		return s[i]
+	if i >= len(s) {
+		return 0
 	}
-	return 0
+	return s[i]
 }
