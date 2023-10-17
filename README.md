@@ -1,14 +1,25 @@
 # radix
 
-The `radix` package implements radix sorting, currently for all signed and unsigned integer types.
+The `radix` package implements radix sorting, currently for all signed and unsigned integer slices, and string slices.
 
 Usage:
 
 ```go
-import "github.com/stuarthighley/radix"
+package main
 
-func Example() {
-	data := []uint64{4, 2, 1, 3}
-	data = radix.Sort(data)
+import (
+	"fmt"
+
+	"github.com/stuarthighley/radix"
+)
+
+func main() {
+	uints := []uint64{4, 2, 1, 3}
+	radix.SortInts(uints)
+	fmt.Println(uints)
+
+	data := []string{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"}
+	radix.SortStrings(data)
+	fmt.Println(data)
 }
 ```
