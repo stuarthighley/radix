@@ -1,6 +1,6 @@
 # radix
 
-The `radix` package implements radix sorting, currently for all signed and unsigned integer types.
+The `radix` package implements radix sorting, currently for all signed and unsigned integer slices, and string slices.
 
 Usage:
 
