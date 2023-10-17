@@ -3,9 +3,9 @@ package radix
 import (
 	"math/bits"
 	"reflect"
+	"slices"
 
 	"golang.org/x/exp/constraints"
-	"golang.org/x/exp/slices"
 )
 
 const base = 8

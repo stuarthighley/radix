@@ -3,12 +3,12 @@ package radix_test
 import (
 	"math"
 	"math/rand"
+	"slices"
 	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stuarthighley/radix"
-	"golang.org/x/exp/slices"
 )
 
 const fuzzLen = 100
