@@ -9,6 +9,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/stuarthighley/radix"
 )
@@ -21,5 +22,9 @@ func main() {
 	data := []string{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"}
 	radix.SortStrings(data)
 	fmt.Println(data)
+
+	floats := []float64{74.3, 59.0, math.Inf(1), 238.2, -784.0, 2.3, math.NaN(), math.NaN(), math.Inf(-1), 9845.768, -959.7485, 905, 7.8, 7.8}
+	radix.SortFloats(floats)
+	fmt.Println(floats)
 }
 ```
