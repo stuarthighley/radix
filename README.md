@@ -23,7 +23,7 @@ func main() {
 	radix.SortStrings(data)
 	fmt.Println(data)
 
-	floats := []float64{74.3, math.Inf(1), 238.2, -784.0, 2.3, math.NaN(), math.Inf(-1), 9845.768, -959.7485, 7.8, 7.8}
+	floats := []float64{238.2, -784.0, 2.3, math.NaN(), math.Inf(-1), 9845.768, -959.7485, 7.8, 7.8}
 	radix.SortFloats(floats)
 	fmt.Println(floats)
 }
