@@ -1,11 +1,11 @@
 package radix
 
 // SortStrings sorts a slice of strings in ascending order.
-func SortStrings[T ~string](input []T) {
+func SortStrings[S ~string](input []S) {
 
 	// Iterate backwards over string chars
 	work1 := input
-	work2 := make([]T, len(work1))
+	work2 := make([]S, len(work1))
 	for column := maxLen(input) - 1; column >= 0; column-- {
 
 		// Accumulate each element's bucket
@@ -37,7 +37,7 @@ func SortStrings[T ~string](input []T) {
 }
 
 // maxLen returns the length of the longest string in the given slice.
-func maxLen[T ~string](s []T) int {
+func maxLen[S ~string](s []S) int {
 	maxLen := 0
 	for _, e := range s {
 		maxLen = max(maxLen, len(e))
@@ -46,17 +46,9 @@ func maxLen[T ~string](s []T) int {
 }
 
 // charOrZero returns the char at index i, or 0 if the string is shorter than i.
-func charOrZero[T ~string](s T, i int) byte {
+func charOrZero[S ~string](s S, i int) byte {
 	if i >= len(s) {
 		return 0
 	}
 	return s[i]
-}
-
-// shallowEqual returns true if the slice lengths and pointers are equal
-func shallowEqual[T any](s1, s2 []T) bool {
-	if len(s1) != len(s2) {
-		return false
-	}
-	return len(s1) == 0 || &s1[0] == &s2[0]
 }

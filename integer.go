@@ -15,16 +15,16 @@ const mask = numBuckets - 1  // 255
 var buckets [numBuckets]int
 
 // SortInts sorts a slice of any integer type in ascending order.
-func SortInts[T constraints.Integer](input []T) {
+func SortInts[I constraints.Integer](input []I) {
 	if len(input) < 2 {
 		return
 	}
 
 	// Prepare XOR mask for signed ints
-	typeBitLen := reflect.TypeOf(*new(T)).Bits()
-	signMask := T(0)
+	typeBitLen := reflect.TypeOf(*new(I)).Bits()
+	signMask := I(0)
 	testUnsigned := -1
-	if T(testUnsigned) < 0 {
+	if I(testUnsigned) < 0 {
 		signMask = 1 << (typeBitLen - 1)
 	}
 
@@ -33,7 +33,7 @@ func SortInts[T constraints.Integer](input []T) {
 
 	// Iterate over all significant columns
 	work1 := input
-	work2 := make([]T, len(work1))
+	work2 := make([]I, len(work1))
 	for column := 0; column < typeBitLen; column += base {
 
 		// We can skip iterations higher than the absolute values,
@@ -74,7 +74,7 @@ func SortInts[T constraints.Integer](input []T) {
 
 // getMaxBitLen returns the highest number of bits used in the ints from the passed slice.
 // The sign bit for negative ints is ignored.
-func getMaxBitLen[T constraints.Integer](s []T) int {
+func getMaxBitLen[I constraints.Integer](s []I) int {
 	highest := slices.Max(s)
 	if highest < 0 {
 		highest = (^highest) + 1
@@ -84,4 +84,12 @@ func getMaxBitLen[T constraints.Integer](s []T) int {
 		lowest = (^lowest) + 1
 	}
 	return max(bits.Len64(uint64(highest)), bits.Len64(uint64(lowest)))
+}
+
+// shallowEqual returns true if the slice lengths and pointers are equal
+func shallowEqual[T any](s1, s2 []T) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+	return len(s1) == 0 || &s1[0] == &s2[0]
 }

@@ -12,9 +12,9 @@ import (
 func SortFloats[F constraints.Float](input []F) {
 	input = sortNaNs(input)
 	if isFloat32[F]() {
-		unsafeFlipSortFlip[F, uint32](input)
+		flipSortUnflip[F, uint32](input)
 	} else {
-		unsafeFlipSortFlip[F, uint64](input)
+		flipSortUnflip[F, uint64](input)
 	}
 }
 
@@ -36,40 +36,43 @@ func isFloat32[F constraints.Float]() bool {
 	return F(math.SmallestNonzeroFloat32)/2 == 0
 }
 
-// unsafeFlipSortFlip converts float slices to unsigned, flips some bits to allow sorting, sorts and unflips.
+// flipSortUnflip converts float slices to unsigned, flips some bits to allow sorting, sorts and unflips.
 // F and U must be the same bit size, and len(buf) must be >= len(x)
 // This will not work if NaNs are present in x. Remove them first.
-func unsafeFlipSortFlip[F constraints.Float, U constraints.Unsigned](slice []F) {
-	floatSize := reflect.TypeOf(*new(F)).Size() * 8
+func flipSortUnflip[F constraints.Float, U constraints.Unsigned](slice []F) {
 	// Change slice type to uint
 	p := (*U)(unsafe.Pointer(unsafe.SliceData(slice)))
 	uintSlice := unsafe.Slice(p, cap(slice))[:len(slice)]
 	// Flip some bits to make the sort work
-	floatFlip(uintSlice, 1<<(floatSize-1))
+	floatFlip(uintSlice)
 	// Sort the slice as a uint slice
 	SortInts(uintSlice)
 	// Flip the bits back
-	floatUnflip(uintSlice, 1<<(floatSize-1))
+	floatUnflip(uintSlice)
 }
 
 // floatFlip flips some bits to make the sort work
-func floatFlip[U constraints.Unsigned](y []U, topBit U) {
-	for i, e := range y {
+// If top bit set, flip every bit. Else, turn on top bit
+func floatFlip[U constraints.Unsigned](slice []U) {
+	topBit := U(1 << ((reflect.TypeOf(*new(U)).Size() * 8) - 1))
+	for i, e := range slice {
 		if e&topBit == topBit {
-			y[i] = e ^ (^U(0))
+			slice[i] = ^slice[i]
 		} else {
-			y[i] = e ^ topBit
+			slice[i] |= topBit
 		}
 	}
 }
 
 // floatUnflip undoes floatFlip
-func floatUnflip[U constraints.Unsigned](y []U, topBit U) {
-	for i, e := range y {
+// If top bit set, turn off top bit. Else, flip every bit
+func floatUnflip[U constraints.Unsigned](slice []U) {
+	topBit := U(1 << ((reflect.TypeOf(*new(U)).Size() * 8) - 1))
+	for i, e := range slice {
 		if e&topBit == topBit {
-			y[i] = e ^ topBit
+			slice[i] &= ^topBit
 		} else {
-			y[i] = e ^ (^U(0))
+			slice[i] = ^slice[i]
 		}
 	}
 }
