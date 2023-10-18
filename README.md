@@ -14,9 +14,9 @@ import (
 )
 
 func main() {
-	uints := []uint64{4, 2, 1, 3}
-	radix.SortInts(uints)
-	fmt.Println(uints)
+	ints := []int{74, 59, 238, -784, 9845, 959, 905, 0, 0, 42, 7586, -5467984, 7586}
+	radix.SortInts(ints)
+	fmt.Println(ints)
 
 	data := []string{"", "Hello", "foo", "bar", "foo", "f00", "%*&^*&^&", "***"}
 	radix.SortStrings(data)
