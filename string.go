@@ -30,16 +30,15 @@ func SortStrings[S ~string](input []S) {
 		work1, work2 = work2, work1
 	}
 
-	// One final copy if needed
-	if !shallowEqual(input, work1) {
-		copy(input, work1)
-	}
+	// One final copy to ensure sorted slice is returned.
+	// Go will skip the copy if source and destination match.
+	copy(input, work1)
 }
 
 // maxLen returns the length of the longest string in the given slice.
-func maxLen[S ~string](s []S) int {
+func maxLen[S ~string](slice []S) int {
 	maxLen := 0
-	for _, e := range s {
+	for _, e := range slice {
 		maxLen = max(maxLen, len(e))
 	}
 	return maxLen

@@ -66,10 +66,9 @@ func SortInts[I constraints.Integer](input []I) {
 		work1, work2 = work2, work1
 	}
 
-	// One final copy if needed
-	if !shallowEqual(input, work1) {
-		copy(input, work1)
-	}
+	// One final copy to ensure sorted slice is returned.
+	// Go will skip the copy if source and destination match.
+	copy(input, work1)
 }
 
 // getMaxBitLen returns the highest number of bits used in the ints from the passed slice.
@@ -84,12 +83,4 @@ func getMaxBitLen[I constraints.Integer](s []I) int {
 		lowest = (^lowest) + 1
 	}
 	return max(bits.Len64(uint64(highest)), bits.Len64(uint64(lowest)))
-}
-
-// shallowEqual returns true if the slice lengths and pointers are equal
-func shallowEqual[T any](s1, s2 []T) bool {
-	if len(s1) != len(s2) {
-		return false
-	}
-	return len(s1) == 0 || &s1[0] == &s2[0]
 }
