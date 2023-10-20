@@ -3,7 +3,6 @@ package radix
 import (
 	"math/bits"
 	"reflect"
-	"slices"
 
 	"golang.org/x/exp/constraints"
 )
@@ -74,11 +73,14 @@ func SortInts[I constraints.Integer](input []I) {
 // getMaxBitLen returns the highest number of bits used in the ints from the passed slice.
 // The sign bit for negative ints is ignored.
 func getMaxBitLen[I constraints.Integer](s []I) int {
-	highest := slices.Max(s)
+	highest, lowest := s[0], s[0]
+	for i := range s[1:] {
+		highest = max(highest, s[i])
+		lowest = min(lowest, s[i])
+	}
 	if highest < 0 {
 		highest = (^highest) + 1
 	}
-	lowest := slices.Min(s)
 	if lowest < 0 {
 		lowest = (^lowest) + 1
 	}
