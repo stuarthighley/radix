@@ -1,5 +1,7 @@
 # radix
 
+[https://github.com/stuarthighley/radix](https://github.com/stuarthighley/radix)
+
 The `radix` package implements radix sorting for slices of signed and unsigned integers, floats, and strings.
 
 Usage:
